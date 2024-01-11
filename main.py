@@ -4,12 +4,22 @@ import requests
 with open('credit_info.txt', 'r') as file:
     for line in file:
 
-        loanAmount, loanPeriod, lastName, firstName, middleName, dob, \
-        passportSeries, passportNumber, passportIssueDate, passportIssuedBy, \
-        snils, education, registrationAddress, residentialAddress, phone \
+        login, password, loanAmount, loanPeriod, lastName, firstName, middleName, dob,\
+        passportSeries, passportNumber, passportIssueDate, passportIssuedBy,\
+        snils, education, registrationAddress, residentialAddress, phone\
         = line.strip().split(' ')
 
-        form_data = {
+        login_data = {
+                    'login': login,
+                    'password': password
+                }
+
+        info_data = {
+                    'login': login,
+                    'phone': phone
+                }
+
+        loan_data = {
                     'credit_program': "program2",
                     'loan_amount': loanAmount,
                     'loan_period': loanPeriod,
@@ -29,7 +39,14 @@ with open('credit_info.txt', 'r') as file:
                     'agreement': "on"
                 }
 
-        res = requests.post('http://127.0.0.1:5000/createcase', json=form_data)
+        res = requests.post('http://127.0.0.1:5000/login', json=login_data)
+        if res.ok:
+            print(res.json())
 
+        res = requests.post('http://127.0.0.1:5000/getinfo', json=info_data)
+        if res.ok:
+            print(res.json())
+
+        res = requests.post('http://127.0.0.1:5000/createcase', json=loan_data)
         if res.ok:
             print(res.json())
